@@ -40,9 +40,10 @@ def callback():
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
-    line_bot_api.reply_message(
-        event.reply_token,
-        TextSendMessage(text="wwwww"))
+    if event.messgae.text[:5] == "build" or event.messgae.text[:3] == "ビルド":
+        line_bot_api.reply_message(
+            event.reply_token,
+            TextSendMessage(text="wwwww"))
 
 
 if __name__ == "__main__":
