@@ -41,6 +41,27 @@ def callback():
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     if event.message.text[:5] == "build" or event.message.text[:3] == "ビルド":
+        if event.message.text[:5] == "build":
+            buildflag = True
+            if event.message.text[5] == " " or event.message.text[5] == "　":
+                try:
+                    print(int(event.message.text[6:15]))
+                except:
+                    print("ERROR")
+                else:
+                    uid = int(event.message.text[6:15])
+                    dict = {"uid":uid,"charaindex":1,"scoretype":3}
+                    with open('./argument.json', 'w') as f:
+                        json.dump(dict, f, ensure_ascii=False)
+                    cwd = os.path.abspath(os.path.dirname(__file__))   
+                    subprocess.run(["node", f'{cwd}/getchara.js'])
+                    with open('./chara.json') as f:
+                        jsn = json.load(f)
+                    charaList = jsn["chara"]
+                    items = [QuickReplyButton(action=MessageAction(label=f"{chara}", text=f"{chara}")) for chara in charaList]
+                    messages = TextSendMessage(text="キャラを選んでね！",
+                               quick_reply=QuickReply(items=items))
+                    line_bot_api.reply_message(event.reply_token, messages=messages)
         line_bot_api.reply_message(
             event.reply_token,
             TextSendMessage(text="wwwww"))
