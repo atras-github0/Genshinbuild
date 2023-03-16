@@ -46,15 +46,16 @@ def callback():
 def handle_message(event):
     uid = 0
     if (event.message.text[:5] == "build") or (event.message.text[:3] == "ビルド"):
+        line_bot_api.push_message(event.source.user_id,TextSendMessage(text="aaa"))     
         if event.message.text[:5] == "build":
-            line_bot_api.reply_message(event.reply_token,TextSendMessage(text="bbb"))
             if event.message.text[5:6] == " " or event.message.text[5:6] == "　":
+                line_bot_api.push_message(event.source.user_id,TextSendMessage(text="bbb"))     
                 try:
                     print(int(event.message.text[6:15]))
                 except:
                     print("ERROR")
-                else:
-                    line_bot_api.reply_message(event.reply_token,TextSendMessage(text="ccc"))           
+                else:    
+                    line_bot_api.push_message(event.source.user_id,TextSendMessage(text="ccc"))           
                     uid = int(event.message.text[6:15])
                     dict = {"uid":uid,"charaindex":1,"scoretype":3}
                     with open('./argument.json', 'w') as f:
