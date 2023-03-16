@@ -49,7 +49,7 @@ def handle_message(event):
         TextSendMessage(text="aaa")
         if event.message.text[:5] == "build":
             TextSendMessage(text="bbb")
-            if event.message.text[5] == " " or event.message.text[5] == "　":
+            if event.message.text[5:6] == " " or event.message.text[5:6] == "　":
                 try:
                     print(int(event.message.text[6:15]))
                 except:
