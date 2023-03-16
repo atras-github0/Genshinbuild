@@ -1,3 +1,6 @@
+import subprocess,os,json
+import Generater
+
 from flask import Flask, request, abort
 
 from linebot import (
@@ -7,19 +10,20 @@ from linebot.exceptions import (
     InvalidSignatureError
 )
 from linebot.models import (
-    MessageEvent, TextMessage, TextSendMessage,
+    MessageEvent, TextMessage, TextSendMessage,QuickReply,QuickReplyButton,MessageAction
 )
 import os
 
 app = Flask(__name__)
 
 #環境変数取得
-YOUR_CHANNEL_ACCESS_TOKEN = os.getenv("CHANNEL_ACCESS_TOKEN")
-YOUR_CHANNEL_SECRET = os.getenv("CHANNEL_SECRET")
+YOUR_CHANNEL_ACCESS_TOKEN = "0WeNsuQxCv9inX3MMA+xJcLuqlxzfA4RWl8BvO6oCSKK7X6bn36qxIRBS4GN9Yfn0/EFNwCb7+WeMkTgAJ2KrrJr2vn4aVoYDYPVQxROW1YiUITuZAkVytEVGFIETSO2UN5KPlFRDcnyUWLwYhoZgQdB04t89/1O/w1cDnyilFU="
+YOUR_CHANNEL_SECRET = "4f674720b15ce7e33d414313d7d5fdef"
 
 line_bot_api = LineBotApi(YOUR_CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(YOUR_CHANNEL_SECRET)
 
+buildflag = False
 @app.route("/callback", methods=['POST'])
 def callback():
     # get X-Line-Signature header value
@@ -40,17 +44,18 @@ def callback():
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
-    if event.message.text[:5] == "build" or event.message.text[:3] == "ビルド":
+    uid = 0
+    if (event.message.text[:5] == "build") or (event.message.text[:3] == "ビルド"):
+        line_bot_api.reply_message(event.reply_token, messages="aaa")
         if event.message.text[:5] == "build":
-            buildflag = True
+            line_bot_api.reply_message(event.reply_token, messages="bbb")
             if event.message.text[5] == " " or event.message.text[5] == "　":
-                print("1")
                 try:
                     print(int(event.message.text[6:15]))
                 except:
                     print("ERROR")
                 else:
-                    print("2")
+                    line_bot_api.reply_message(event.reply_token, messages="ccc")
                     uid = int(event.message.text[6:15])
                     dict = {"uid":uid,"charaindex":1,"scoretype":3}
                     with open('./argument.json', 'w') as f:
@@ -64,12 +69,21 @@ def handle_message(event):
                     messages = TextSendMessage(text="キャラを選んでね！",
                                quick_reply=QuickReply(items=items))
                     line_bot_api.reply_message(event.reply_token, messages=messages)
-        line_bot_api.reply_message(
-            event.reply_token,
-            TextSendMessage(text="wwwww"))
-
+            elif len(event.message.text) == 5:
+                line_bot_api
+        if event.message.text[:3] == "ビルド":
+            if event.message.text[3] == " " or event.message.text[3] == "　":
+                line_bot_api
 
 if __name__ == "__main__":
 #    app.run()
     port = int(os.getenv("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
+
+dict = {"uid":830307817,"charaindex":1,"scoretype":3}
+
+#with open('./argument.json', 'w') as f:
+ #   json.dump(dict, f, ensure_ascii=False)
+#cwd = os.path.abspath(os.path.dirname(__file__))   
+#subprocess.run(["node", f'{cwd}/createdata.js'])
+#Generater.generation(Generater.read_json('data.json'))
