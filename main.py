@@ -46,7 +46,6 @@ def callback():
 def handle_message(event):
     uid = 0
     if (event.message.text[:5] == "build") or (event.message.text[:3] == "ビルド"):
-        line_bot_api.reply_message(event.reply_token,TextSendMessage(text="aaa"))
         if event.message.text[:5] == "build":
             line_bot_api.reply_message(event.reply_token,TextSendMessage(text="bbb"))
             if event.message.text[5:6] == " " or event.message.text[5:6] == "　":
