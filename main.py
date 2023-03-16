@@ -44,11 +44,13 @@ def handle_message(event):
         if event.message.text[:5] == "build":
             buildflag = True
             if event.message.text[5] == " " or event.message.text[5] == "　":
+                print("1")
                 try:
                     print(int(event.message.text[6:15]))
                 except:
                     print("ERROR")
                 else:
+                    print("2")
                     uid = int(event.message.text[6:15])
                     dict = {"uid":uid,"charaindex":1,"scoretype":3}
                     with open('./argument.json', 'w') as f:
