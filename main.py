@@ -46,21 +46,21 @@ def callback():
 def handle_message(event):
     uid = 0
     if (event.message.text[:5] == "build") or (event.message.text[:3] == "ビルド"):
-        TextSendMessage(text="aaa")
+        line_bot_api.reply_message(event.reply_token,TextSendMessage(text="aaa"))
         if event.message.text[:5] == "build":
-            TextSendMessage(text="bbb")
+            line_bot_api.reply_message(event.reply_token,TextSendMessage(text="bbb"))
             if event.message.text[5:6] == " " or event.message.text[5:6] == "　":
                 try:
                     print(int(event.message.text[6:15]))
                 except:
                     print("ERROR")
                 else:
-                    TextSendMessage(text="ccc")                
+                    line_bot_api.reply_message(event.reply_token,TextSendMessage(text="ccc"))           
                     uid = int(event.message.text[6:15])
                     dict = {"uid":uid,"charaindex":1,"scoretype":3}
                     with open('./argument.json', 'w') as f:
                         json.dump(dict, f, ensure_ascii=False)
-                    TextSendMessage(text="ddd")
+                    line_bot_api.reply_message(event.reply_token,TextSendMessage(text="ddd"))
                     cwd = os.path.abspath(os.path.dirname(__file__))   
                     subprocess.run(["node", f'{cwd}/getchara.js'])
                     with open('./chara.json') as f:
