@@ -65,13 +65,13 @@ def handle_message(event):
                     line_bot_api.reply_message(event.reply_token,TextSendMessage(text=str(arg["uid"])))
                     cwd = os.path.abspath(os.path.dirname(__file__))   
                     subprocess.run(["node", f'{cwd}/getchara.js'])
-                    with open('./chara.json') as f:
+                    with open('./chara.json',encoding="utf-8") as f:
                         jsn = json.load(f)
                     charaList = jsn["chara"]
                     items = [QuickReplyButton(action=MessageAction(label=f"{chara}", text=f"{chara}")) for chara in charaList]
                     messages = TextSendMessage(text="キャラを選んでね！",
                                quick_reply=QuickReply(items=items))
-
+                    line_bot_api.reply_message(event.reply_token, messages=messages)
             elif len(event.message.text) == 5:
                 line_bot_api
         if event.message.text[:3] == "ビルド":
