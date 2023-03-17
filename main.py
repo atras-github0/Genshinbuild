@@ -66,9 +66,9 @@ def handle_message(event):
                     cwd = os.path.abspath(os.path.dirname(__file__))
                     connect.test()   
                     time.sleep(2)
-                    f = open('test.txt', 'r')
-                    txt = f.read()
-                    line_bot_api.reply_message(event.reply_token,TextSendMessage(text=txt))
+                    #f = open('test.txt', 'r')
+                    #txt = f.read()
+                    line_bot_api.reply_message(event.reply_token,TextSendMessage(text="txt"))
             elif len(event.message.text) == 5:
                 line_bot_api
         if event.message.text[:3] == "ビルド":
