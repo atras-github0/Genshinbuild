@@ -65,7 +65,8 @@ def handle_message(event):
                     cwd = os.path.abspath(os.path.dirname(__file__))   
                     subprocess.run(["node", './test.js'])
                     f = open('test.txt', 'r')
-                    line_bot_api.reply_message(event.reply_token,TextSendMessage(text=test))
+                    txt = f.read()
+                    line_bot_api.reply_message(event.reply_token,TextSendMessage(text=txt))
             elif len(event.message.text) == 5:
                 line_bot_api
         if event.message.text[:3] == "ビルド":
