@@ -71,7 +71,7 @@ def handle_message(event):
                     items = [QuickReplyButton(action=MessageAction(label=f"{chara}", text=f"{chara}")) for chara in charaList]
                     messages = TextSendMessage(text="キャラを選んでね！",
                                quick_reply=QuickReply(items=items))
-                    line_bot_api.reply_message(event.reply_token, messages=messages)
+
             elif len(event.message.text) == 5:
                 line_bot_api
         if event.message.text[:3] == "ビルド":
