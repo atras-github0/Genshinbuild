@@ -64,9 +64,9 @@ def handle_message(event):
                     line_bot_api.reply_message(event.reply_token,TextSendMessage(text=str(arg["uid"])))
                     cwd = os.path.abspath(os.path.dirname(__file__))   
                     subprocess.run(["node", './test.js'])
-                    with open('./test.json') as f:
-                        test = json.load(f)
-                    line_bot_api.reply_message(event.reply_token,TextSendMessage(text=test["test"]))
+                    with open('./test.txt') as f:
+                        test = f
+                    line_bot_api.reply_message(event.reply_token,TextSendMessage(text=test))
             elif len(event.message.text) == 5:
                 line_bot_api
         if event.message.text[:3] == "ビルド":
@@ -80,8 +80,8 @@ if __name__ == "__main__":
 
 dict = {"uid":830307817,"charaindex":1,"scoretype":3}
 
-#with open('./argument.json', 'w') as f:
- #   json.dump(dict, f, ensure_ascii=False)
-#cwd = os.path.abspath(os.path.dirname(__file__))   
-#subprocess.run(["node", f'{cwd}/createdata.js'])
-#Generater.generation(Generater.read_json('data.json'))
+with open('./argument.json', 'w') as f:
+    json.dump(dict, f, ensure_ascii=False)
+cwd = os.path.abspath(os.path.dirname(__file__))   
+subprocess.run(["node", f'{cwd}/createdata.js'])
+Generater.generation(Generater.read_json('data.json'))
