@@ -14,7 +14,7 @@ from linebot.exceptions import (
     InvalidSignatureError
 )
 from linebot.models import (
-    MessageEvent, TextMessage, TextSendMessage,QuickReply,QuickReplyButton,MessageAction
+    MessageEvent, TextMessage, TextSendMessage,QuickReply,QuickReplyButton,MessageAction,PostbackTemplateAction,PostbackAction
 )
 import os
 
@@ -70,7 +70,7 @@ def handle_message(event):
                     with open('./chara.json',encoding="utf-8") as f:
                         chara = json.load(f)
                     chara_list = chara["chara"]
-                    items = [QuickReplyButton(action=MessageAction(label=f"{chara}", text=f"{chara}",type="postback")) for chara in chara_list]
+                    items = [QuickReplyButton(action=PostbackTemplateAction(label=f"{chara}", data=f"{chara}",type="postback")) for chara in chara_list]
                     messages = TextSendMessage(text="キャラを選択してね！",
                                quick_reply=QuickReply(items=items))
                     line_bot_api.push_message(event.source.user_id, messages=messages)
