@@ -69,7 +69,7 @@ def handle_message(event):
                         chara = json.load(f)
                     chara_list = chara["chara"]
                     items = [QuickReplyButton(action=MessageAction(label=f"{chara}", text=f"{chara}が好き")) for chara in chara_list]
-                    messages = TextSendMessage(text="キャラを選択してね！",
+                    messages = TextSendMessage(text="キャラを選択してね！！",
                                quick_reply=QuickReply(items=items))
                     line_bot_api.reply_message(event.reply_token, messages=messages)
             elif len(event.message.text) == 5:
