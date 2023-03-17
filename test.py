@@ -8,4 +8,4 @@ with open('./chara.json',encoding="utf-8") as f:
 charaList = jsn["chara"]
 print(charaList)
 cwd = os.path.abspath(os.path.dirname(__file__))   
-subprocess.run(["node", './getchara.js'])
+subprocess.run(["node", './getchara.js']) 
