@@ -46,6 +46,7 @@ def callback():
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     uid = 0
+    line_bot_api.push_message(event.source.user_id,TextSendMessage(text=event.type)) 
     if (event.message.text[:5] == "build") or (event.message.text[:3] == "ビルド"):
         line_bot_api.push_message(event.source.user_id,TextSendMessage(text="aaa"))     
         if event.message.text[:5] == "build":

@@ -2,3 +2,4 @@ Flask==2.2.3
 line-bot-sdk==2.4.1
 Jinja2==3.1.2
 Pillow==9.4.0
+enkanetwork.py==1.4.1
