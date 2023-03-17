@@ -64,8 +64,7 @@ def handle_message(event):
                     line_bot_api.reply_message(event.reply_token,TextSendMessage(text=str(arg["uid"])))
                     cwd = os.path.abspath(os.path.dirname(__file__))   
                     subprocess.run(["node", './test.js'])
-                    with open('./test.txt') as f:
-                        test = f
+                    f = open('test.txt', 'r')
                     line_bot_api.reply_message(event.reply_token,TextSendMessage(text=test))
             elif len(event.message.text) == 5:
                 line_bot_api
