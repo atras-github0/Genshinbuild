@@ -62,8 +62,7 @@ def handle_message(event):
                     with open('./argument.json') as f:
                         arg = json.load(f)
                     line_bot_api.reply_message(event.reply_token,TextSendMessage(text=str(arg["uid"])))
-                    cwd = os.path.abspath(os.path.dirname(__file__))   
-                    subprocess.run(["node", f'{cwd}/getchara.js'])
+
             elif len(event.message.text) == 5:
                 line_bot_api
         if event.message.text[:3] == "ビルド":
