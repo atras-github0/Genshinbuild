@@ -64,7 +64,7 @@ def handle_message(event):
                     line_bot_api.push_message(event.source.user_id,TextSendMessage(text="ccc"))           
                     uid = int(event.message.text[6:15])
                     dict = {"uid":uid,"charaindex":1,"scoretype":3}
-                    with open('./argument.json', 'w') as f:
+                    with open('./argument.json', 'w',encoding="utf-8") as f:
                         json.dump(dict, f, ensure_ascii=False)
                     asyncio.run(getchara.get(uid))
                     with open('./chara.json',encoding="utf-8") as f:
@@ -84,7 +84,26 @@ def handle_message(event):
 def handle_postback(event):
     postbackdata = str(event.postback.data).split(",")
     if(postbackdata[1] == "chara"):
-        line_bot_api.push_message(event.source.user_id,TextSendMessage(text=postbackdata[0])) 
+        line_bot_api.push_message(event.source.user_id,TextSendMessage(text=postbackdata[0]))
+        with open('./chara.json',encoding="utf-8") as f:
+            chara = json.load(f)
+        with open('./argument.json',encoding="utf-8") as f:
+            arg = json.load(f)
+        dict = {"uid":arg["uid"],"charaindex":chara[postbackdata[0]],"scoretype":3}
+        with open('./argument.json', 'w',encoding="utf-8") as f:
+            json.dump(dict, f, ensure_ascii=False)
+        score_list = ["攻撃力","HP","防御力","元素熟知","元素チャージ効率"]
+        items = [QuickReplyButton(action=PostbackAction(label=f"{type}", data=f"{type},score")) for type in score_list]
+        messages = TextSendMessage(text="換算方法を選択してね",
+                quick_reply=QuickReply(items=items))
+        line_bot_api.push_message(event.source.user_id, messages=messages)
+    if(postbackdata[1] == "score"):
+        line_bot_api.push_message(event.source.user_id,TextSendMessage(text=postbackdata[0]))
+        with open('./argument.json',encoding="utf-8") as f:
+            arg = json.load(f)
+        dict = {"uid":arg["uid"],"charaindex":arg["charaindex"],"scoretype":postbackdata[0]}
+        with open('./argument.json', 'w', encoding="utf-8") as f:
+            json.dump(dict, f, ensure_ascii=False)
 if __name__ == "__main__":
 #    app.run()
     port = int(os.getenv("PORT", 5000))
