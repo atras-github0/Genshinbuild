@@ -82,8 +82,8 @@ if __name__ == "__main__":
 
 dict = {"uid":830307817,"charaindex":1,"scoretype":3}
 
-with open('./argument.json', 'w') as f:
-    json.dump(dict, f, ensure_ascii=False)
-cwd = os.path.abspath(os.path.dirname(__file__))   
-subprocess.run(["node", f'{cwd}/createdata.js'])
-Generater.generation(Generater.read_json('data.json'))
+#with open('./argument.json', 'w') as f:
+   # json.dump(dict, f, ensure_ascii=False)
+#cwd = os.path.abspath(os.path.dirname(__file__))   
+#subprocess.run(["node", f'{cwd}/createdata.js'])
+#Generater.generation(Generater.read_json('data.json'))
