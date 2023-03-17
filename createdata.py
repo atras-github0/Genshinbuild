@@ -2,10 +2,8 @@ import ast
 import asyncio
 import json
 import math
-from enkanetwork import EnkaNetworkAPI
 from enkanetwork import * 
 enka = EnkaNetworkAPI()
-from enkanetwork import Assets
 
 with open('./argument.json') as f:
     arg = json.load(f)
@@ -140,4 +138,3 @@ if(arg.scoretype == 1):stype = "HP"
 if(arg.scoretype == 2):stype = "防御力"
 if(arg.scoretype == 3):stype = "元素熟知"
 if(arg.scoretype == 4):stype = "元素チャージ効率"
-asyncio.run(f(arg["uid"],arg["charaindex"],stype))
