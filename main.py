@@ -1,3 +1,4 @@
+import asyncio
 import subprocess,os,json
 import time
 import Generater
@@ -15,6 +16,8 @@ from linebot.models import (
     MessageEvent, TextMessage, TextSendMessage,QuickReply,QuickReplyButton,MessageAction
 )
 import os
+
+from getchara import get
 
 app = Flask(__name__)
 
@@ -62,16 +65,14 @@ def handle_message(event):
                     dict = {"uid":uid,"charaindex":1,"scoretype":3}
                     with open('./argument.json', 'w') as f:
                         json.dump(dict, f, ensure_ascii=False)
-                    with open('./argument.json') as f:
-                        arg = json.load(f)
-                    line_bot_api.reply_message(event.reply_token,TextSendMessage(text=str(arg["uid"])))
+                    asyncio.run(get(uid))
                     with open('./chara.json',encoding="utf-8") as f:
                         chara = json.load(f)
                     chara_list = chara["chara"]
-                    items = [QuickReplyButton(action=MessageAction(label=f"{chara}", text=f"{chara}が好き")) for chara in chara_list]
+                    items = [QuickReplyButton(action=MessageAction(label=f"{chara}", text=f"{chara}",type="postback")) for chara in chara_list]
                     messages = TextSendMessage(text="キャラを選択してね！",
                                quick_reply=QuickReply(items=items))
-                    line_bot_api.reply_message(event.reply_token, messages=messages)
+                    line_bot_api.push_message(event.source.user_id, messages=messages)
             elif len(event.message.text) == 5:
                 line_bot_api
         if event.message.text[:3] == "ビルド":
