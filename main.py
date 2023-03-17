@@ -1,6 +1,7 @@
 import subprocess,os,json
+import time
 import Generater
-
+import connect
 from flask import Flask, request, abort
 
 from linebot import (
@@ -62,8 +63,9 @@ def handle_message(event):
                     with open('./argument.json') as f:
                         arg = json.load(f)
                     line_bot_api.reply_message(event.reply_token,TextSendMessage(text=str(arg["uid"])))
-                    cwd = os.path.abspath(os.path.dirname(__file__))   
-                    subprocess.run(["node", './test.js'])
+                    cwd = os.path.abspath(os.path.dirname(__file__))
+                    connect.test()   
+                    time.sleep(2)
                     f = open('test.txt', 'r')
                     txt = f.read()
                     line_bot_api.reply_message(event.reply_token,TextSendMessage(text=txt))
