@@ -4,15 +4,13 @@ import json
 from enkanetwork import * 
 enka = EnkaNetworkAPI()
 
-with open('./argument.json') as f:
-    arg = json.load(f)
 assets = Assets(lang="jp")
 
-async def get():
+async def get(uid):
     async with enka:
         chara = {}
         charaList = []
-        charadata = ((await enka.fetch_user_by_uid(arg["uid"])).characters)
+        charadata = ((await enka.fetch_user_by_uid(uid)).characters)
     for i in range(len(charadata)):
         chara[charadata[i].name] = i
         charaList.append(charadata[i].name)
