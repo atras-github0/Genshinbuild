@@ -228,7 +228,7 @@ def generation(data):
             
     
     
-    Shadow = Image.open(f'{cwd}/Assets/shadow.png').resize(Base.size)
+    Shadow = Image.open(f'{cwd}/Assets/Shadow.png').resize(Base.size)
     CharacterImage = CharacterImage.crop((289,0,1728,1024))
     CharacterImage = CharacterImage.resize((int(CharacterImage.width*0.75), int(CharacterImage.height*0.75)))
     
@@ -556,5 +556,3 @@ def pil_to_base64(img, format="jpeg"):
     img_str = base64.b64encode(buffer.getvalue()).decode("ascii")
 
     return img_str
-
-generation(read_json("data.json"))
