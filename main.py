@@ -1,6 +1,7 @@
 import subprocess,os,json
 import time
 import Generater
+import createdata
 import connect
 from flask import Flask, request, abort
 
@@ -63,12 +64,14 @@ def handle_message(event):
                     with open('./argument.json') as f:
                         arg = json.load(f)
                     line_bot_api.reply_message(event.reply_token,TextSendMessage(text=str(arg["uid"])))
-                    cwd = os.path.abspath(os.path.dirname(__file__))
-                    connect.test()   
-                    time.sleep(2)
-                    #f = open('test.txt', 'r')
-                    #txt = f.read()
-                    line_bot_api.reply_message(event.reply_token,TextSendMessage(text="txt"))
+                    with open('./chara.json',encoding="utf-8") as f:
+                        chara = json.load(f)
+                    chara_list = chara["chara"]
+                    items = [QuickReplyButton(action=MessageAction(label=f"{chara}", text=f"{chara}が好き")) for chara in chara_list]
+                    messages = TextSendMessage(text="キャラを選択してね！",
+                               quick_reply=QuickReply(items=items))
+
+                    line_bot_api.reply_message(event.reply_token, messages=messages)
             elif len(event.message.text) == 5:
                 line_bot_api
         if event.message.text[:3] == "ビルド":
