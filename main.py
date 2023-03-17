@@ -66,8 +66,6 @@ def handle_message(event):
                     dict = {"uid":uid,"charaindex":1,"scoretype":3}
                     with open('./argument.json', 'w') as f:
                         json.dump(dict, f, ensure_ascii=False)
-                    with open('./argument.json') as f:
-                        arg = json.load(f)
                     asyncio.run(getchara.get(uid))
                     with open('./chara.json',encoding="utf-8") as f:
                         chara = json.load(f)

@@ -17,4 +17,3 @@ async def get(uid):
     chara["chara"] = charaList
     with open('./chara.json', 'w',encoding="utf-8") as f:
         json.dump(chara, f, ensure_ascii=False)
-asyncio.run(get())
