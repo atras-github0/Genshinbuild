@@ -70,7 +70,7 @@ async function f(uid,charaindex,scoretype){
     }
     datajson += '"total" : ' + Scoretotal + ',"flower" : ' + ScoreList["flower"] + ',"wing" : ' + ScoreList["wing"] + ',"clock" : ' + ScoreList["clock"] + ',"cup" : ' + ScoreList["cup"] + ',"crown" : ' + ScoreList["crown"] + '},'
     datajson += '"Artifacts": {'
-    let parsentList = ["攻撃力パーセンテージ","HPパーセンテージ","防御力パーセンテージ","会心率","会心ダメージ","元素チャージ効率","与える治癒効果","炎元素ダメージ","物理元素ダメージ","水元素ダメージ","氷元素ダメージ","草元素ダメージ","雷元素ダメージ","風元素ダメージ","岩元素ダメージ"]
+    let parsentList = ["攻撃パーセンテージ","HPパーセンテージ","防御パーセンテージ","会心率","会心ダメージ","元素チャージ効率","与える治癒効果","炎元素ダメージ","物理ダメージ","水元素ダメージ","氷元素ダメージ","草元素ダメージ","雷元素ダメージ","風元素ダメージ","岩元素ダメージ"]
     for(let k = 0;k < 5;k++){
         let artifact2 = chara.artifacts[k]
         if(k == 0){datajson += '"flower" : {'}
@@ -78,7 +78,7 @@ async function f(uid,charaindex,scoretype){
         if(k == 2){datajson += '"clock" : {'}
         if(k == 3){datajson += '"cup" : {'}
         if(k == 4){datajson += '"crown" : {'}
-        if(artifact2 === undefined){}
+        if(artifact2 === undefined){datajson += "}"}
         else{ 
             datajson += '"type" : "' + artifact2.artifactData.set.name.get("jp") + '",'
             let mainvalue = 0
@@ -102,11 +102,13 @@ async function f(uid,charaindex,scoretype){
                 if(l == artifact2.substats.total.length -1){datajson += '}'}
                 else{datajson += '},'}
             }
-            if(k == 4){datajson += "]}"}
-            else{datajson += "]},"}
+            if(k == 4){datajson += "]"}
+            else{datajson += "]"}
         }
+        if(k == 4){datajson += "}"}
+        else{datajson += "},"}
     }
-    datajson += '},"元素": "' + charaPr.characterData.element.name.get("jp").at(0) + '"}'
+    datajson += ',"元素": "' + charaPr.characterData.element.name.get("jp").at(0) + '"}'
     fs.writeFile("data.json", datajson, (err) => {
         if (err) rej(err);
         if (!err) {

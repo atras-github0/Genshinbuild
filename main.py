@@ -60,7 +60,9 @@ def handle_message(event):
                     dict = {"uid":uid,"charaindex":1,"scoretype":3}
                     with open('./argument.json', 'w') as f:
                         json.dump(dict, f, ensure_ascii=False)
-                    line_bot_api.reply_message(event.reply_token,TextSendMessage(text="ddd"))
+                    with open('./chara.json') as f:
+                        arg = json.load(f)
+                    line_bot_api.reply_message(event.reply_token,TextSendMessage(text=str(arg["uid"])))
                     cwd = os.path.abspath(os.path.dirname(__file__))   
                     subprocess.run(["node", f'{cwd}/getchara.js'])
                     with open('./chara.json') as f:
