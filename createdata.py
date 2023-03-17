@@ -134,5 +134,10 @@ async def f(uid,charaindex,scoretype):
     with open('./data.json', 'w',encoding="utf-8") as f:
         json.dump(dict_sample, f, ensure_ascii=False)
     print(datajson)
-
-asyncio.run(f(arg["uid"],arg["charaindex"],arg["scoretype"]))
+stype= ""
+if(arg.scoretype == 0):stype = "攻撃力"
+if(arg.scoretype == 1):stype = "HP"
+if(arg.scoretype == 2):stype = "防御力"
+if(arg.scoretype == 3):stype = "元素熟知"
+if(arg.scoretype == 4):stype = "元素チャージ効率"
+asyncio.run(f(arg["uid"],arg["charaindex"],stype))
