@@ -14,7 +14,7 @@ from linebot.exceptions import (
     InvalidSignatureError
 )
 from linebot.models import (
-    MessageEvent, TextMessage, TextSendMessage,QuickReply,QuickReplyButton,MessageAction,PostbackTemplateAction,PostbackAction
+    MessageEvent, TextMessage, TextSendMessage,QuickReply,QuickReplyButton,MessageAction,PostbackTemplateAction,PostbackAction,PostbackEvent
 )
 import os
 
@@ -70,7 +70,7 @@ def handle_message(event):
                     with open('./chara.json',encoding="utf-8") as f:
                         chara = json.load(f)
                     chara_list = chara["chara"]
-                    items = [QuickReplyButton(action=PostbackTemplateAction(label=f"{chara}", data=f"{chara}",type="postback")) for chara in chara_list]
+                    items = [QuickReplyButton(action=PostbackAction(label=f"{chara}", data=f"{chara},chara")) for chara in chara_list]
                     messages = TextSendMessage(text="キャラを選択してね！",
                                quick_reply=QuickReply(items=items))
                     line_bot_api.push_message(event.source.user_id, messages=messages)
@@ -80,6 +80,11 @@ def handle_message(event):
             if event.message.text[3] == " " or event.message.text[3] == "　":
                 line_bot_api
 
+@handler.add(PostbackEvent)
+def handle_postback(event):
+    postbackdata = str(event.postback.data).split(",")
+    if(postbackdata[1] == "chara"):
+        line_bot_api.push_message(event.source.user_id,TextSendMessage(text=postbackdata[0])) 
 if __name__ == "__main__":
 #    app.run()
     port = int(os.getenv("PORT", 5000))
