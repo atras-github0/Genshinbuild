@@ -28,7 +28,7 @@ YOUR_CHANNEL_ACCESS_TOKEN = os.getenv("CHANNEL_ACCESS_TOKEN")
 YOUR_CHANNEL_SECRET = os.getenv("CHANNEL_SECRET")
 line_bot_api = LineBotApi(YOUR_CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(YOUR_CHANNEL_SECRET)
-dbx = dropbox.Dropbox('sl.BaxeNP3116FaNuz7gZiTNRUn3UekuaBevCy0w2LzYOiTc1rqAIGebS_TsmVBgUShLeBFuIRMK4s9OkiXPhRT-CbcF-NvtQBqvAMWT0k6AzgnWELpPOx7xU-uggYo_7I-xfFRYFk')
+dbx = dropbox.Dropbox('sl.BaydCWF-UaKluFdbAEaG6HIkHeBL9HVW199FWWdbElcYXzEgquBLUQDH8CzCF7s9RhMe3Snj2p6oOST5omuID1pb9Cx33yI1lO_z7vJeiSp-Y2XGCsbi1BnKnofXqFS0xQuuWgpVzwFm')
 
 buildflag = False
 @app.route("/callback", methods=['POST'])
