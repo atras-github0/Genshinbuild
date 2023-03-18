@@ -115,8 +115,8 @@ def handle_postback(event):
         cwd = os.path.abspath(os.path.dirname(__file__))
         computer_path= f"{cwd}/Image.png"
         dropbox_path="/Images/Image.jpg"
-        
-        dbx.files_delete('/folder2')
+
+        dbx.files_delete('/Images')
         dbx.files_create_folder('/Images')
         dbx.files_upload(open(computer_path, "rb").read(), dropbox_path)
 
