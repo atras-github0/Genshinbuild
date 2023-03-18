@@ -545,6 +545,7 @@ def generation(data):
             D.text((1831,265),str(q),font=config_font(19))
             
     Base.show()
+    Base.save(f'{cwd}/Image.png')
             
     return pil_to_base64(Base,format='png')
         
@@ -556,3 +557,5 @@ def pil_to_base64(img, format="jpeg"):
     img_str = base64.b64encode(buffer.getvalue()).decode("ascii")
 
     return img_str
+
+generation(read_json("data.json"))

@@ -8,7 +8,7 @@ enka = EnkaNetworkAPI()
 with open('./argument.json',encoding="utf-8") as f:
     arg = json.load(f)
 assets = Assets(lang="jp")
-async def f(uid,charaindex,scoretype):
+async def create(uid,charaindex,scoretype):
     async with enka:
         with open('./genshinDB.json',encoding="utf-8") as f:
             db = json.load(f)

@@ -104,6 +104,9 @@ def handle_postback(event):
         dict = {"uid":arg["uid"],"charaindex":arg["charaindex"],"scoretype":postbackdata[0]}
         with open('./argument.json', 'w', encoding="utf-8") as f:
             json.dump(dict, f, ensure_ascii=False)
+        with open('./argument.json',encoding="utf-8") as f:
+            arg = json.load(f)
+        asyncio.run(createdata.create(arg["uid"],arg["charaindex"],arg["scoretype"]))
 if __name__ == "__main__":
 #    app.run()
     port = int(os.getenv("PORT", 5000))
