@@ -111,7 +111,7 @@ def handle_postback(event):
         asyncio.run(createdata.create(arg["uid"],arg["charaindex"],arg["scoretype"]))
         dbx.files_create_folder('/Images')
         f = open('./Image.png', 'rb')
-        dbx.files_upload(f.read(),/Images/image.jpg)
+        dbx.files_upload(f.read(),'/Images/image.jpg')
         f.close()
         setting = dropbox.sharing.SharedLinkSettings(requested_visibility=dropbox.sharing.RequestedVisibility.public)
         link = dbx.sharing_create_shared_link_with_settings(path='/Images/image.jpg', settings=setting)
