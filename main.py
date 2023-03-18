@@ -109,7 +109,7 @@ def handle_postback(event):
         with open('./argument.json',encoding="utf-8") as f:
             arg = json.load(f)
         asyncio.run(createdata.create(arg["uid"],arg["charaindex"],arg["scoretype"]))
-        dbx.files_create_folder('/Images')
+
         f = open('./Image.png', 'rb')
         dbx.files_upload(f.read(),'/Images/image.jpg')
         f.close()
