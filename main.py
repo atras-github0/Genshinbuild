@@ -26,7 +26,7 @@ app = Flask(__name__)
 #環境変数取得
 YOUR_CHANNEL_ACCESS_TOKEN = os.getenv("CHANNEL_ACCESS_TOKEN")
 YOUR_CHANNEL_SECRET = os.getenv("CHANNEL_SECRET")
-DROPBOX_ACCESS_TOKEN = "生成されたアクセストークン"
+DROPBOX_ACCESS_TOKEN = os.getenv("DROPBOX_ACCESS_TOKEN")
 
 line_bot_api = LineBotApi(YOUR_CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(YOUR_CHANNEL_SECRET)
