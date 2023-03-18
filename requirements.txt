@@ -4,3 +4,4 @@ Jinja2==3.1.2
 Pillow==9.4.0
 cachetools==5.3.0
 pydantic==1.10.6
+dropbox==11.32.0
