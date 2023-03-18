@@ -96,6 +96,9 @@ def handle_postback(event):
         dict = {"uid":arg["uid"],"charaindex":chara[postbackdata[0]],"scoretype":3}
         with open('./argument.json', 'w',encoding="utf-8") as f:
             json.dump(dict, f, ensure_ascii=False)
+        with open('./argument.json',encoding="utf-8") as f:
+            arg = json.load(f)
+        line_bot_api.push_message(event.source.user_id,TextSendMessage(text=arg['charaindex']))
         score_list = ["攻撃力","HP","防御力","元素熟知","元素チャージ効率"]
         items = [QuickReplyButton(action=PostbackAction(label=f"{type}", data=f"{type},score")) for type in score_list]
         messages = TextSendMessage(text="換算方法を選択してね",
