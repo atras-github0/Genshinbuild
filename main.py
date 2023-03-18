@@ -115,7 +115,6 @@ def handle_postback(event):
         cwd = os.path.abspath(os.path.dirname(__file__))
         computer_path= f"{cwd}/Image.png"
         dropbox_path="/Images/Image.jpg"
-        dbx.files_create_folder('/Images')
         dbx.files_upload(open(computer_path, "rb").read(), dropbox_path)
 
         setting = dropbox.sharing.SharedLinkSettings(requested_visibility=dropbox.sharing.RequestedVisibility.public)
