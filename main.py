@@ -26,9 +26,11 @@ app = Flask(__name__)
 #環境変数取得
 YOUR_CHANNEL_ACCESS_TOKEN = os.getenv("CHANNEL_ACCESS_TOKEN")
 YOUR_CHANNEL_SECRET = os.getenv("CHANNEL_SECRET")
+DROPBOX_ACCESS_TOKEN = "生成されたアクセストークン"
+
 line_bot_api = LineBotApi(YOUR_CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(YOUR_CHANNEL_SECRET)
-dbx = dropbox.Dropbox('')
+dbx = dropbox.Dropbox(DROPBOX_ACCESS_TOKEN)
 
 buildflag = False
 @app.route("/callback", methods=['POST'])
@@ -109,15 +111,18 @@ def handle_postback(event):
         with open('./argument.json',encoding="utf-8") as f:
             arg = json.load(f)
         asyncio.run(createdata.create(arg["uid"],arg["charaindex"],arg["scoretype"]))
+
+        cwd = os.path.abspath(os.path.dirname(__file__))
+        computer_path= f"{cwd}/Image.png"
+        dropbox_path="/Images/Image.jpg"
         dbx.files_create_folder('/Images')
-        f = open('./Image.png', 'rb')
-        dbx.files_upload(f.read(),'/Images/image.jpg')
-        f.close()
+        dbx.files_upload(open(computer_path, "rb").read(), dropbox_path)
+
         setting = dropbox.sharing.SharedLinkSettings(requested_visibility=dropbox.sharing.RequestedVisibility.public)
-        link = dbx.sharing_create_shared_link_with_settings(path='/Images/image.jpg', settings=setting)
+        link = dbx.sharing_create_shared_link_with_settings(path='/Images/Image.jpg', settings=setting)
 
         # 共有リンク取得
-        links = dbx.sharing_list_shared_links(path=path, direct_only=True).links
+        links = dbx.sharing_list_shared_links(path='/Images/Image.jpg', direct_only=True).links
         if links is not None:
             for link in links:
                 url = link.url 
