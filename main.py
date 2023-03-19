@@ -104,6 +104,7 @@ def handle_postback(event):
         messages = TextSendMessage(text="換算方法を選択してね",
                 quick_reply=QuickReply(items=items))
         line_bot_api.push_message(event.source.user_id, messages=messages)
+
     if(postbackdata[1] == "score"):
         line_bot_api.push_message(event.source.user_id,TextSendMessage(text=postbackdata[0]))
         with open('./argument.json',encoding="utf-8") as f:
