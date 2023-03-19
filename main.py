@@ -115,7 +115,7 @@ def handle_postback(event):
             arg = json.load(f)
         asyncio.run(createdata.create(arg["uid"],arg["charaindex"],arg["scoretype"]))
         with open('./data.json',encoding="utf-8") as f:
-            data = json.load(f)　
+            data = json.load(f)
         line_bot_api.push_message(event.source.user_id,TextSendMessage(text=data))
 
         cwd = os.path.abspath(os.path.dirname(__file__))
