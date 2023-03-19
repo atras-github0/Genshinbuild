@@ -54,18 +54,18 @@ def callback():
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     uid = 0
-    line_bot_api.push_message(event.source.user_id,TextSendMessage(text=event.type)) 
+    #line_bot_api.push_message(event.source.user_id,TextSendMessage(text=event.type)) 
     if (event.message.text[:5] == "build") or (event.message.text[:3] == "ビルド"):
-        line_bot_api.push_message(event.source.user_id,TextSendMessage(text="aaa"))     
+        #line_bot_api.push_message(event.source.user_id,TextSendMessage(text="aaa"))     
         if event.message.text[:5] == "build":
             if event.message.text[5:6] == " " or event.message.text[5:6] == "　":
-                line_bot_api.push_message(event.source.user_id,TextSendMessage(text="bbb"))     
+                line_bot_api.push_message(event.source.user_id,TextSendMessage(text="ちょっとまってね！"))     
                 try:
                     print(int(event.message.text[6:15]))
                 except:
                     print("ERROR")
                 else:    
-                    line_bot_api.push_message(event.source.user_id,TextSendMessage(text="ccc"))           
+                    #line_bot_api.push_message(event.source.user_id,TextSendMessage(text="ccc"))           
                     uid = int(event.message.text[6:15])
                     dict = {"uid":uid,"charaindex":1,"scoretype":3}
                     with open('./argument.json', 'w',encoding="utf-8") as f:
@@ -117,7 +117,7 @@ def handle_postback(event):
         asyncio.run(createdata.create(arg["uid"],arg["charaindex"],arg["scoretype"]))
         with open('./data.json',encoding="utf-8") as f:
             data = json.load(f)
-        line_bot_api.push_message(event.source.user_id,TextSendMessage(text=str(data)))
+        #line_bot_api.push_message(event.source.user_id,TextSendMessage(text=str(data)))
         Generater.generation(Generater.read_json("data.json"))
 
         cwd = os.path.abspath(os.path.dirname(__file__))
@@ -141,7 +141,7 @@ def handle_postback(event):
             for link in links:
                 url = link.url 
                 url = url.replace('www.dropbox','dl.dropboxusercontent').replace('?dl=0','')
-                line_bot_api.push_message(event.source.user_id,TextSendMessage(text=url))
+                #line_bot_api.push_message(event.source.user_id,TextSendMessage(text=url))
 
         setting = dropbox.sharing.SharedLinkSettings(requested_visibility=dropbox.sharing.RequestedVisibility.public)
         link = dbx.sharing_create_shared_link_with_settings(path='/Images/ImagePr.jpg', settings=setting)
@@ -151,7 +151,7 @@ def handle_postback(event):
             for link in links:
                 url2 = link.url 
                 url2 = url.replace('www.dropbox','dl.dropboxusercontent').replace('?dl=0','')
-                line_bot_api.push_message(event.source.user_id,TextSendMessage(text=url2))
+                #line_bot_api.push_message(event.source.user_id,TextSendMessage(text=url2))
         line_bot_api.push_message(event.source.user_id,ImageSendMessage(original_content_url=url,preview_image_url=url2))
 
 if __name__ == "__main__":
