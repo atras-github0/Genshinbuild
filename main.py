@@ -148,9 +148,10 @@ def handle_postback(event):
         links = dbx.sharing_list_shared_links(path='/Images/ImagePr.jpg', direct_only=True).links
         if links is not None:
             for link in links:
-                url = link.url 
-                url = url.replace('www.dropbox','dl.dropboxusercontent').replace('?dl=0','')
-                line_bot_api.push_message(event.source.user_id,TextSendMessage(text=url))
+                url2 = link.url 
+                url2 = url.replace('www.dropbox','dl.dropboxusercontent').replace('?dl=0','')
+                line_bot_api.push_message(event.source.user_id,TextSendMessage(text=url2))
+        line_bot_api.push_message(event.source.user_id,ImageSendMessage(original_content_url=url,preview_image_url=url2))
 
 if __name__ == "__main__":
 #    app.run()
