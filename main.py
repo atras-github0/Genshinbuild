@@ -5,6 +5,7 @@ import Generater
 import getchara
 import createdata
 import dropbox
+from dropbox import DropboxOAuth2FlowNoRedirect
 from flask import Flask, request, abort
 
 from linebot import (
@@ -26,10 +27,13 @@ app = Flask(__name__)
 YOUR_CHANNEL_ACCESS_TOKEN = os.getenv("CHANNEL_ACCESS_TOKEN")
 YOUR_CHANNEL_SECRET = os.getenv("CHANNEL_SECRET")
 DROPBOX_ACCESS_TOKEN = os.getenv("DROPBOX_ACCESS_TOKEN")
+APP_KEY = os.getenv("APP_KEY")
+APP_SECRET = os.getenv("APP_SECRET")
+REFRESH_TOKEN = os.getenv("REFRESH_TOKEN")
 
 line_bot_api = LineBotApi(YOUR_CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(YOUR_CHANNEL_SECRET)
-dbx = dropbox.Dropbox(DROPBOX_ACCESS_TOKEN)
+dbx = dropbox.Dropbox(oauth2_refresh_token=REFRESH_TOKEN, app_key=APP_KEY, app_secret=APP_SECRET)
 
 buildflag = False
 @app.route("/callback", methods=['POST'])
@@ -58,7 +62,7 @@ def handle_message(event):
         #line_bot_api.push_message(event.source.user_id,TextSendMessage(text="aaa"))     
         if event.message.text[:5] == "build":
             if event.message.text[5:6] == " " or event.message.text[5:6] == "　":
-                line_bot_api.push_message(event.source.user_id,TextSendMessage(text="ちょっとまってね！"))     
+                #line_bot_api.push_message(event.source.user_id,TextSendMessage(text="ちょっとまってね！"))     
                 try:
                     print(int(event.message.text[6:15]))
                 except:
@@ -81,7 +85,7 @@ def handle_message(event):
                 line_bot_api
         if event.message.text[:3] == "ビルド":
             if event.message.text[3:4] == " " or event.message.text[3:4] == "　":
-                line_bot_api.push_message(event.source.user_id,TextSendMessage(text="ちょっとまってね！"))     
+                #line_bot_api.push_message(event.source.user_id,TextSendMessage(text="ちょっとまってね！"))     
                 try:
                     print(int(event.message.text[4:13]))
                 except:
