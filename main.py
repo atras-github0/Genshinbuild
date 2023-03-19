@@ -145,7 +145,6 @@ def handle_postback(event):
         setting = dropbox.sharing.SharedLinkSettings(requested_visibility=dropbox.sharing.RequestedVisibility.public)
         link = dbx.sharing_create_shared_link_with_settings(path='/Images/ImagePr.jpg', settings=setting)
 
-        # 共有リンク取得
         links = dbx.sharing_list_shared_links(path='/Images/ImagePr.jpg', direct_only=True).links
         if links is not None:
             for link in links:
