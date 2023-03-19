@@ -4,7 +4,6 @@ import time
 import Generater
 import getchara
 import createdata
-import connect
 import dropbox
 from flask import Flask, request, abort
 
