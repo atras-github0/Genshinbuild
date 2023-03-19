@@ -81,8 +81,26 @@ def handle_message(event):
             elif len(event.message.text) == 5:
                 line_bot_api
         if event.message.text[:3] == "ビルド":
-            if event.message.text[3] == " " or event.message.text[3] == "　":
-                line_bot_api
+            if event.message.text[3:4] == " " or event.message.text[3:4] == "　":
+                line_bot_api.push_message(event.source.user_id,TextSendMessage(text="ちょっとまってね！"))     
+                try:
+                    print(int(event.message.text[4:13]))
+                except:
+                    print("ERROR")
+                else:    
+                    #line_bot_api.push_message(event.source.user_id,TextSendMessage(text="ccc"))           
+                    uid = int(event.message.text[4:13])
+                    dict = {"uid":uid,"charaindex":1,"scoretype":3}
+                    with open('./argument.json', 'w',encoding="utf-8") as f:
+                        json.dump(dict, f, ensure_ascii=False)
+                    asyncio.run(getchara.get(uid))
+                    with open('./chara.json',encoding="utf-8") as f:
+                        chara = json.load(f)
+                    chara_list = chara["chara"]
+                    items = [QuickReplyButton(action=PostbackAction(label=f"{chara}", data=f"{chara},chara")) for chara in chara_list]
+                    messages = TextSendMessage(text="キャラを選択してね！",
+                               quick_reply=QuickReply(items=items))
+                    line_bot_api.push_message(event.source.user_id, messages=messages)
 
 @handler.add(PostbackEvent)
 def handle_postback(event):
