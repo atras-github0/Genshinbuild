@@ -117,7 +117,7 @@ def handle_postback(event):
         with open('./data.json',encoding="utf-8") as f:
             data = json.load(f)
         line_bot_api.push_message(event.source.user_id,TextSendMessage(text=str(data)))
-        Generater.generation()
+        Generater.generation(Generater.read_json("data.json"))
 
         cwd = os.path.abspath(os.path.dirname(__file__))
         computer_path= f"{cwd}/Image.png"
