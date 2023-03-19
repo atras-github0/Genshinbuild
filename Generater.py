@@ -546,7 +546,9 @@ def generation(data):
             
     Base.show()
     Base.save(f'{cwd}/Image.png')
-            
+    Base2 = Base.resize((Base.width // 2, Base.height // 2))
+    Base2.save(f'{cwd}/ImagePr.png')
+       
     return pil_to_base64(Base,format='png')
         
     
