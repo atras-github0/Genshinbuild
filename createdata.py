@@ -54,7 +54,7 @@ async def create(uid,charaindex,scoretype):
     datajson += '"Talent": { "通常" : ' + str(chara.skills[0].level) + ', "スキル" : '+ str(chara.skills[1].level) + ', "爆発" : ' + str(chara.skills[2].level) + "},"
     datajson += '"Base" : {"HP" : ' + str(chara.stats.BASE_HP.to_rounded()) + ', "攻撃力" : ' + str(chara.stats.FIGHT_PROP_BASE_ATTACK.to_rounded()) + ', "防御力" : ' + str(chara.stats.FIGHT_PROP_BASE_DEFENSE.to_rounded()) + "}}," 
     weapon = chara.equipments[len(chara.equipments) - 1]
-    datajson += '"Weapon": {"name": "' + weapon.detail.name + '", "Level" : ' + str(weapon.level) + ', "rarelity" : ' + str(weapon.detail.rarity) + ',"totu" : ' + str(weapon.refinement) + ',"BaseATK" : ' + str(weapon.detail.mainstats.value) + ', "Sub" : {"name" : "' + weapon.detail.substats[0].name + '"' + ', "value" : "' + str(weapon.detail.substats[0].value) + '"' + "}},"
+    datajson += '"Weapon": {"name": "' + weapon.detail.name + '", "Level" : ' + str(weapon.level) + ', "rarelity" : ' + str(weapon.detail.rarity) + ',"totu" : ' + str(weapon.refinement) + ',"BaseATK" : ' + str(weapon.detail.mainstats.value) + ', "Sub" : {"name" : "' + db[weapon.detail.substats[0].prop_id] + '"' + ', "value" : ' + str(weapon.detail.substats[0].value) + "}},"
     datajson += '"Score" : {"State" : ' + '"' + scoretype + '",'
     ScoreList = {"flower" : 0,"wing" : 0,"clock" : 0,"cup" : 0,"crown" : 0,}
     Scoretotal = 0
@@ -76,7 +76,7 @@ async def create(uid,charaindex,scoretype):
                     scoretemp += artsub.value
                 if(scoretype == "元素熟知" and artsub.prop_id == 'FIGHT_PROP_ELEMENT_MASTERY'):
                     scoretemp += round(artsub.value / 4 * 10)/10
-                if(scoretype == "HP" and artsub.prop_id == 'FIGHT_PROP_HP_PERCEN'):
+                if(scoretype == "HP" and artsub.prop_id == 'FIGHT_PROP_HP_PERCENT'):
                     scoretemp += artsub.value
                 if(scoretype == "防御力" and artsub.prop_id == 'FIGHT_PROP_DEFENSE_PERCENT'):
                     scoretemp += round(artsub.value * 8)/10
