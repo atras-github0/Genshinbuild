@@ -182,7 +182,6 @@ if __name__ == "__main__":
     port = int(os.getenv("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
 
-dict = {"uid":830307817,"charaindex":1,"scoretype":3}
 
 #with open('./argument.json', 'w') as f:
    # json.dump(dict, f, ensure_ascii=False)
