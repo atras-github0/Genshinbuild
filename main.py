@@ -60,7 +60,6 @@ def callback():
 
     return 'OK'
 
-
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     if (event.message.text[:5] == "build") or (event.message.text[:3] == "ビルド"):
