@@ -145,10 +145,10 @@ def handle_postback(event):
 
         cwd = os.path.abspath(os.path.dirname(__file__))
         computer_path= f"{cwd}/Image.png"
-        dropbox_path="/Images/Image.jpg"
+        dropbox_path=f"/Images/Image{event.source.user_id}.jpg"
 
         computer_path2= f"{cwd}/ImagePr.png"
-        dropbox_path2="/Images/ImagePr.jpg"
+        dropbox_path2=f"/Images/ImagePr{event.source.user_id}.jpg"
 
         dbx.files_delete('/Images')
         dbx.files_create_folder('/Images')
@@ -156,10 +156,10 @@ def handle_postback(event):
         dbx.files_upload(open(computer_path2, "rb").read(), dropbox_path2)
 
         setting = dropbox.sharing.SharedLinkSettings(requested_visibility=dropbox.sharing.RequestedVisibility.public)
-        link = dbx.sharing_create_shared_link_with_settings(path='/Images/Image.jpg', settings=setting)
+        link = dbx.sharing_create_shared_link_with_settings(path=dropbox_path, settings=setting)
 
         # 共有リンク取得
-        links = dbx.sharing_list_shared_links(path='/Images/Image.jpg', direct_only=True).links
+        links = dbx.sharing_list_shared_links(path=dropbox_path, direct_only=True).links
         if links is not None:
             for link in links:
                 url = link.url 
@@ -167,9 +167,9 @@ def handle_postback(event):
                 #line_bot_api.push_message(event.source.user_id,TextSendMessage(text=url))
 
         setting = dropbox.sharing.SharedLinkSettings(requested_visibility=dropbox.sharing.RequestedVisibility.public)
-        link = dbx.sharing_create_shared_link_with_settings(path='/Images/ImagePr.jpg', settings=setting)
+        link = dbx.sharing_create_shared_link_with_settings(path=dropbox_path2, settings=setting)
 
-        links = dbx.sharing_list_shared_links(path='/Images/ImagePr.jpg', direct_only=True).links
+        links = dbx.sharing_list_shared_links(path=dropbox_path2, direct_only=True).links
         if links is not None:
             for link in links:
                 url2 = link.url 
