@@ -1,10 +1,12 @@
 import asyncio
 import subprocess,os,json
-import time
 import Generater
 import getchara
 import createdata
 import dropbox
+import gspread
+from oauth2client.service_account import ServiceAccountCredentials
+import csv
 from dropbox import DropboxOAuth2FlowNoRedirect
 from flask import Flask, request, abort
 
@@ -17,7 +19,6 @@ from linebot.exceptions import (
 from linebot.models import (
     MessageEvent, TextMessage, TextSendMessage,QuickReply,QuickReplyButton,MessageAction,PostbackTemplateAction,PostbackAction,PostbackEvent,ImageMessage, ImageSendMessage
 )
-import os
 
 from getchara import get
 
@@ -30,10 +31,17 @@ DROPBOX_ACCESS_TOKEN = os.getenv("DROPBOX_ACCESS_TOKEN")
 APP_KEY = os.getenv("APP_KEY")
 APP_SECRET = os.getenv("APP_SECRET")
 REFRESH_TOKEN = os.getenv("REFRESH_TOKEN")
+SPREADSHEET_KEY = os.getenv("SPREAD_KEY")
 
 line_bot_api = LineBotApi(YOUR_CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(YOUR_CHANNEL_SECRET)
 dbx = dropbox.Dropbox(oauth2_refresh_token=REFRESH_TOKEN, app_key=APP_KEY, app_secret=APP_SECRET)
+
+scope =['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
+creds = ServiceAccountCredentials.from_json_keyfile_name("genshinbuild-aeaea1bcd7b8.json", scope)
+gc = gspread.authorize(creds)
+
+worksheet = gc.open_by_key(SPREADSHEET_KEY).sheet1
 
 buildflag = False
 @app.route("/callback", methods=['POST'])
@@ -56,54 +64,12 @@ def callback():
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
-    uid = 0
-    #line_bot_api.push_message(event.source.user_id,TextSendMessage(text=event.type)) 
     if (event.message.text[:5] == "build") or (event.message.text[:3] == "ビルド"):
-        #line_bot_api.push_message(event.source.user_id,TextSendMessage(text="aaa"))     
         if event.message.text[:5] == "build":
-            if event.message.text[5:6] == " " or event.message.text[5:6] == "　":
-                #line_bot_api.push_message(event.source.user_id,TextSendMessage(text="ちょっとまってね！"))     
-                try:
-                    print(int(event.message.text[6:15]))
-                except:
-                    print("ERROR")
-                else:    
-                    #line_bot_api.push_message(event.source.user_id,TextSendMessage(text="ccc"))           
-                    uid = int(event.message.text[6:15])
-                    dict = {"uid":uid,"charaindex":1,"scoretype":3}
-                    with open('./argument.json', 'w',encoding="utf-8") as f:
-                        json.dump(dict, f, ensure_ascii=False)
-                    asyncio.run(getchara.get(uid))
-                    with open('./chara.json',encoding="utf-8") as f:
-                        chara = json.load(f)
-                    chara_list = chara["chara"]
-                    items = [QuickReplyButton(action=PostbackAction(label=f"{chara}", data=f"{chara},chara")) for chara in chara_list]
-                    messages = TextSendMessage(text="キャラを選択してね！",
-                               quick_reply=QuickReply(items=items))
-                    line_bot_api.push_message(event.source.user_id, messages=messages)
-            elif len(event.message.text) == 5:
-                line_bot_api
+            checkUID(event,5)
         if event.message.text[:3] == "ビルド":
-            if event.message.text[3:4] == " " or event.message.text[3:4] == "　":
-                #line_bot_api.push_message(event.source.user_id,TextSendMessage(text="ちょっとまってね！"))     
-                try:
-                    print(int(event.message.text[4:13]))
-                except:
-                    print("ERROR")
-                else:    
-                    #line_bot_api.push_message(event.source.user_id,TextSendMessage(text="ccc"))           
-                    uid = int(event.message.text[4:13])
-                    dict = {"uid":uid,"charaindex":1,"scoretype":3}
-                    with open('./argument.json', 'w',encoding="utf-8") as f:
-                        json.dump(dict, f, ensure_ascii=False)
-                    asyncio.run(getchara.get(uid))
-                    with open('./chara.json',encoding="utf-8") as f:
-                        chara = json.load(f)
-                    chara_list = chara["chara"]
-                    items = [QuickReplyButton(action=PostbackAction(label=f"{chara}", data=f"{chara},chara")) for chara in chara_list]
-                    messages = TextSendMessage(text="キャラを選択してね！",
-                               quick_reply=QuickReply(items=items))
-                    line_bot_api.push_message(event.source.user_id, messages=messages)
+            checkUID(event,3)
+    else:checkUID(event,0)
 
 @handler.add(PostbackEvent)
 def handle_postback(event):
@@ -127,7 +93,6 @@ def handle_postback(event):
         line_bot_api.push_message(event.source.user_id, messages=messages)
 
     if(postbackdata[1] == "score"):
-        #line_bot_api.push_message(event.source.user_id,TextSendMessage(text=postbackdata[0]))
         with open('./argument.json',encoding="utf-8") as f:
             arg = json.load(f)
         dict = {"uid":arg["uid"],"charaindex":arg["charaindex"],"scoretype":postbackdata[0]}
@@ -139,7 +104,6 @@ def handle_postback(event):
         with open('./data.json',encoding="utf-8") as f:
             data = json.load(f)
         line_bot_api.push_message(event.source.user_id,TextSendMessage(text='30秒くらいかかるからちょっとまってね！'))
-        #line_bot_api.push_message(event.source.user_id,TextSendMessage(text=str(data)))
 
         Generater.generation(Generater.read_json("data.json"))
 
@@ -150,41 +114,75 @@ def handle_postback(event):
         computer_path2= f"{cwd}/ImagePr.png"
         dropbox_path2=f"/Images/ImagePr{event.source.user_id}.jpg"
 
-        dbx.files_delete('/Images')
-        dbx.files_create_folder('/Images')
         dbx.files_upload(open(computer_path, "rb").read(), dropbox_path)
         dbx.files_upload(open(computer_path2, "rb").read(), dropbox_path2)
 
-        setting = dropbox.sharing.SharedLinkSettings(requested_visibility=dropbox.sharing.RequestedVisibility.public)
-        link = dbx.sharing_create_shared_link_with_settings(path=dropbox_path, settings=setting)
+        url = getShereLink(dropbox_path)
+        url2 = getShereLink(dropbox_path2)
 
-        # 共有リンク取得
-        links = dbx.sharing_list_shared_links(path=dropbox_path, direct_only=True).links
-        if links is not None:
-            for link in links:
-                url = link.url 
-                url = url.replace('www.dropbox','dl.dropboxusercontent').replace('?dl=0','')
-                #line_bot_api.push_message(event.source.user_id,TextSendMessage(text=url))
-
-        setting = dropbox.sharing.SharedLinkSettings(requested_visibility=dropbox.sharing.RequestedVisibility.public)
-        link = dbx.sharing_create_shared_link_with_settings(path=dropbox_path2, settings=setting)
-
-        links = dbx.sharing_list_shared_links(path=dropbox_path2, direct_only=True).links
-        if links is not None:
-            for link in links:
-                url2 = link.url 
-                url2 = url.replace('www.dropbox','dl.dropboxusercontent').replace('?dl=0','')
-                #line_bot_api.push_message(event.source.user_id,TextSendMessage(text=url2))
         line_bot_api.push_message(event.source.user_id,ImageSendMessage(original_content_url=url,preview_image_url=url2))
+
+def getShereLink(dropboxpath):
+    setting = dropbox.sharing.SharedLinkSettings(requested_visibility=dropbox.sharing.RequestedVisibility.public)
+    link = dbx.sharing_create_shared_link_with_settings(path=dropboxpath, settings=setting)
+
+    # 共有リンク取得
+    links = dbx.sharing_list_shared_links(path=dropboxpath, direct_only=True).links
+    url : str = ""
+    if links is not None:
+        for link in links:
+            url = link.url 
+            url = url.replace('www.dropbox','dl.dropboxusercontent').replace('?dl=0','')
+    return url
+
+def checkUID(event,index):
+    text:str = event.message.text.replace(" ","").replace("　","")
+    if len(event.message.text) == index:
+        id = event.source.user_id
+        idlist = worksheet.col_values(1)
+        if id in idlist:
+            for i in idlist:
+                if worksheet.cell(i, 1).value == id:
+                    uid = int(worksheet.cell(i, 2).value)
+                    dict = {"uid":uid,"charaindex":1,"scoretype":3}
+                    with open('./argument.json', 'w',encoding="utf-8") as f:
+                        json.dump(dict, f, ensure_ascii=False)
+                    asyncio.run(getchara.get(uid))
+                    with open('./chara.json',encoding="utf-8") as f:
+                        chara = json.load(f)
+                    chara_list = chara["chara"]
+                    items = [QuickReplyButton(action=PostbackAction(label=f"{chara}", data=f"{chara},chara")) for chara in chara_list]
+                    messages = TextSendMessage(text="キャラを選択してね！",quick_reply=QuickReply(items=items))
+                    line_bot_api.push_message(event.source.user_id, messages=messages)
+    else:
+        try:
+            print(int(text[index:index + 9]))
+        except:
+            print("ERROR")
+        else:    
+            uid = int(text[index:index + 9])
+            id = event.source.user_id
+            idlist = worksheet.col_values(1)
+            if id in idlist:
+                for i in idlist:
+                    if worksheet.cell(i, 1).value == id:
+                        worksheet.update(f'B{i}',str(uid))
+            else:
+                items = [id, uid]
+                worksheet.append_row(items)
+            dict = {"uid":uid,"charaindex":1,"scoretype":3}
+            with open('./argument.json', 'w',encoding="utf-8") as f:
+                json.dump(dict, f, ensure_ascii=False)
+            asyncio.run(getchara.get(uid))
+            with open('./chara.json',encoding="utf-8") as f:
+                chara = json.load(f)
+            chara_list = chara["chara"]
+            items = [QuickReplyButton(action=PostbackAction(label=f"{chara}", data=f"{chara},chara")) for chara in chara_list]
+            messages = TextSendMessage(text="キャラを選択してね！",quick_reply=QuickReply(items=items))
+            line_bot_api.push_message(event.source.user_id, messages=messages)
 
 if __name__ == "__main__":
 #    app.run()
     port = int(os.getenv("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
 
-
-#with open('./argument.json', 'w') as f:
-   # json.dump(dict, f, ensure_ascii=False)
-#cwd = os.path.abspath(os.path.dirname(__file__))   
-#subprocess.run(["node", f'{cwd}/createdata.js'])
-#Generater.generation(Generater.read_json('data.json'))
