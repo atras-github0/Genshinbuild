@@ -121,7 +121,7 @@ def handle_postback(event):
         line_bot_api.push_message(event.source.user_id,ImageSendMessage(original_content_url=url,preview_image_url=url2))
         continue_list = ["他のキャラで続ける","終わる"]
         items = [QuickReplyButton(action=PostbackAction(label=f"{cont}", data=f"{cont},continue")) for cont in continue_list]
-        messages = TextSendMessage(quick_reply=QuickReply(items=items))
+        messages = TextSendMessage(text="続ける？",quick_reply=QuickReply(items=items))
         line_bot_api.push_message(event.source.user_id, messages=messages)
     if(postbackdata[1] == "continue"):
         if postbackdata[0] == "他のキャラで続ける":
