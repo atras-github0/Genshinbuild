@@ -128,16 +128,15 @@ def handle_postback(event):
             id = event.source.user_id
             idlist = worksheet.col_values(1)
             if id in idlist:
-                for i,k in idlist:
-                    if k == id:
-                        uid = int(worksheet.cell(i + 1, 2).value)
-                        asyncio.run(getchara.get(uid))
-                        with open('./chara.json',encoding="utf-8") as f:
-                            chara = json.load(f)
-                        chara_list = chara["chara"]
-                        items = [QuickReplyButton(action=PostbackAction(label=f"{chara}", data=f"{chara},chara")) for chara in chara_list]
-                        messages = TextSendMessage(text="キャラを選択してね！",quick_reply=QuickReply(items=items))
-                        line_bot_api.push_message(event.source.user_id, messages=messages)
+                index = idlist.index(id)
+                uid = int(worksheet.cell(index + 1, 2).value)
+                asyncio.run(getchara.get(uid))
+                with open('./chara.json',encoding="utf-8") as f:
+                   chara = json.load(f)
+                chara_list = chara["chara"]
+                items = [QuickReplyButton(action=PostbackAction(label=f"{chara}", data=f"{chara},chara")) for chara in chara_list]
+                messages = TextSendMessage(text="キャラを選択してね！",quick_reply=QuickReply(items=items))
+                line_bot_api.push_message(event.source.user_id, messages=messages)
         elif postbackdata[0] == "終わる":
             return
 def getShereLink(dropboxpath):
@@ -159,19 +158,18 @@ def checkUID(event,index):
         id = event.source.user_id
         idlist = worksheet.col_values(1)
         if id in idlist:
-            for i,k in idlist:
-                if k == id:
-                    uid = int(worksheet.cell(i + 1, 2).value)
-                    dict = {"uid":uid,"charaindex":1,"scoretype":3}
-                    with open('./argument.json', 'w',encoding="utf-8") as f:
-                        json.dump(dict, f, ensure_ascii=False)
-                    asyncio.run(getchara.get(uid))
-                    with open('./chara.json',encoding="utf-8") as f:
-                        chara = json.load(f)
-                    chara_list = chara["chara"]
-                    items = [QuickReplyButton(action=PostbackAction(label=f"{chara}", data=f"{chara},chara")) for chara in chara_list]
-                    messages = TextSendMessage(text="キャラを選択してね！",quick_reply=QuickReply(items=items))
-                    line_bot_api.push_message(event.source.user_id, messages=messages)
+            index = idlist.index(id)
+            uid = int(worksheet.cell(index + 1, 2).value)
+            dict = {"uid":uid,"charaindex":1,"scoretype":3}
+            with open('./argument.json', 'w',encoding="utf-8") as f:
+                json.dump(dict, f, ensure_ascii=False)
+            asyncio.run(getchara.get(uid))
+            with open('./chara.json',encoding="utf-8") as f:
+                chara = json.load(f)
+            chara_list = chara["chara"]
+            items = [QuickReplyButton(action=PostbackAction(label=f"{chara}", data=f"{chara},chara")) for chara in chara_list]
+            messages = TextSendMessage(text="キャラを選択してね！",quick_reply=QuickReply(items=items))
+            line_bot_api.push_message(event.source.user_id, messages=messages)
     else:
         try:
             print(int(text[index:index + 9]))
@@ -182,9 +180,8 @@ def checkUID(event,index):
             id = event.source.user_id
             idlist = worksheet.col_values(1)
             if id in idlist:
-                for i,k in idlist:
-                    if k == id:
-                        worksheet.update(f'B{i + 1}',str(uid))
+                index = idlist.index(id)
+                worksheet.update(f'B{index + 1}',str(uid))
             else:
                 items = [id, uid]
                 worksheet.append_row(items)
