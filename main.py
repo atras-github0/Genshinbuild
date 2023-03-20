@@ -128,9 +128,9 @@ def handle_postback(event):
             id = event.source.user_id
             idlist = worksheet.col_values(1)
             if id in idlist:
-                for i in idlist:
-                    if worksheet.cell(i, 1).value == id:
-                        uid = int(worksheet.cell(i, 2).value)
+                for i,k in idlist:
+                    if k == id:
+                        uid = int(worksheet.cell(i + 1, 2).value)
                         asyncio.run(getchara.get(uid))
                         with open('./chara.json',encoding="utf-8") as f:
                             chara = json.load(f)
@@ -159,9 +159,9 @@ def checkUID(event,index):
         id = event.source.user_id
         idlist = worksheet.col_values(1)
         if id in idlist:
-            for i in idlist:
-                if worksheet.cell(i, 1).value == id:
-                    uid = int(worksheet.cell(i, 2).value)
+            for i,k in idlist:
+                if k == id:
+                    uid = int(worksheet.cell(i + 1, 2).value)
                     dict = {"uid":uid,"charaindex":1,"scoretype":3}
                     with open('./argument.json', 'w',encoding="utf-8") as f:
                         json.dump(dict, f, ensure_ascii=False)
@@ -182,9 +182,9 @@ def checkUID(event,index):
             id = event.source.user_id
             idlist = worksheet.col_values(1)
             if id in idlist:
-                for i in idlist:
-                    if worksheet.cell(i, 1).value == id:
-                        worksheet.update(f'B{i}',str(uid))
+                for i,k in idlist:
+                    if k == id:
+                        worksheet.update(f'B{i + 1}',str(uid))
             else:
                 items = [id, uid]
                 worksheet.append_row(items)
