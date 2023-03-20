@@ -6,7 +6,6 @@ import createdata
 import dropbox
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
-import csv
 from dropbox import DropboxOAuth2FlowNoRedirect
 from flask import Flask, request, abort
 
