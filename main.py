@@ -101,7 +101,7 @@ def handle_postback(event):
         asyncio.run(createdata.create(arg["uid"],arg["charaindex"],arg["scoretype"]))
         with open('./data.json',encoding="utf-8") as f:
             data = json.load(f)
-        line_bot_api.push_message(event.source.user_id,TextSendMessage(text='30秒くらいかかるからちょっとまってね！'))
+        #line_bot_api.push_message(event.source.user_id,TextSendMessage(text='30秒くらいかかるからちょっとまってね！'))
 
         Generater.generation(Generater.read_json("data.json"))
 
@@ -119,10 +119,10 @@ def handle_postback(event):
         url2 = getShereLink(dropbox_path2)
 
         line_bot_api.push_message(event.source.user_id,ImageSendMessage(original_content_url=url,preview_image_url=url2))
-        continue_list = ["他のキャラで続ける","終わる"]
-        items = [QuickReplyButton(action=PostbackAction(label=f"{cont}", data=f"{cont},continue")) for cont in continue_list]
-        messages = TextSendMessage(text="続ける？",quick_reply=QuickReply(items=items))
-        line_bot_api.push_message(event.source.user_id, messages=messages)
+        #continue_list = ["他のキャラで続ける","終わる"]
+        #items = [QuickReplyButton(action=PostbackAction(label=f"{cont}", data=f"{cont},continue")) for cont in continue_list]
+        #messages = TextSendMessage(text="続ける？",quick_reply=QuickReply(items=items))
+        #line_bot_api.push_message(event.source.user_id, messages=messages)
     if(postbackdata[1] == "continue"):
         if postbackdata[0] == "他のキャラで続ける":
             id = event.source.user_id
