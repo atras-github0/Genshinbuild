@@ -1,5 +1,5 @@
 import asyncio
-import subprocess,os,json
+import os,json
 import Generater
 import getchara
 import createdata
