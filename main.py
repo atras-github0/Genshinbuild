@@ -87,8 +87,7 @@ def handle_postback(event):
         #line_bot_api.push_message(event.source.user_id,TextSendMessage(text=arg['charaindex']))
         score_list = ["攻撃力","HP","防御力","元素熟知","元素チャージ効率"]
         items = [QuickReplyButton(action=PostbackAction(label=f"{type}", data=f"{type},score")) for type in score_list]
-        messages = TextSendMessage(text="換算方法を選択してね",
-                quick_reply=QuickReply(items=items))
+        messages = TextSendMessage(text="換算方法を選択してね",quick_reply=QuickReply(items=items))
         line_bot_api.push_message(event.source.user_id, messages=messages)
 
     if(postbackdata[1] == "score"):
@@ -120,7 +119,27 @@ def handle_postback(event):
         url2 = getShereLink(dropbox_path2)
 
         line_bot_api.push_message(event.source.user_id,ImageSendMessage(original_content_url=url,preview_image_url=url2))
-
+        continue_list = ["他のキャラで続ける","終わる"]
+        items = [QuickReplyButton(action=PostbackAction(label=f"{cont}", data=f"{cont},continue")) for cont in continue_list]
+        messages = TextSendMessage(quick_reply=QuickReply(items=items))
+        line_bot_api.push_message(event.source.user_id, messages=messages)
+    if(postbackdata[1] == "continue"):
+        if postbackdata[0] == "他のキャラで続ける":
+            id = event.source.user_id
+            idlist = worksheet.col_values(1)
+            if id in idlist:
+                for i in idlist:
+                    if worksheet.cell(i, 1).value == id:
+                        uid = int(worksheet.cell(i, 2).value)
+                        asyncio.run(getchara.get(uid))
+                        with open('./chara.json',encoding="utf-8") as f:
+                            chara = json.load(f)
+                        chara_list = chara["chara"]
+                        items = [QuickReplyButton(action=PostbackAction(label=f"{chara}", data=f"{chara},chara")) for chara in chara_list]
+                        messages = TextSendMessage(text="キャラを選択してね！",quick_reply=QuickReply(items=items))
+                        line_bot_api.push_message(event.source.user_id, messages=messages)
+        elif postbackdata[0] == "終わる":
+            return
 def getShereLink(dropboxpath):
     setting = dropbox.sharing.SharedLinkSettings(requested_visibility=dropbox.sharing.RequestedVisibility.public)
     link = dbx.sharing_create_shared_link_with_settings(path=dropboxpath, settings=setting)
