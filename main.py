@@ -110,7 +110,6 @@ def handle_postback(event):
 
         computer_path2= f"{cwd}/ImagePr.png"
         dropbox_path2=f"/Images/ImagePr{event.source.user_id}.jpg"
-　　　　　
         for entry in dbx.files_list_folder('/Images').entries:
             print(entry.name)
             if entry == f"Image{event.source.user_id}.jpg":
