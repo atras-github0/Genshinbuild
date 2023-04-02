@@ -110,9 +110,12 @@ def handle_postback(event):
 
         computer_path2= f"{cwd}/ImagePr.png"
         dropbox_path2=f"/Images/ImagePr{event.source.user_id}.jpg"
-
-        dbx.files_delete(dropbox_path)
-        dbx.files_delete(dropbox_path2)
+　　　　　
+　　　　　for entry in dbx.files_list_folder('/Images').entries:
+    　　     print(entry.name)
+            if entry == f"Image{event.source.user_id}.jpg":
+                dbx.files_delete(dropbox_path)
+                dbx.files_delete(dropbox_path2)
         dbx.files_upload(open(computer_path, "rb").read(), dropbox_path)
         dbx.files_upload(open(computer_path2, "rb").read(), dropbox_path2)
 
