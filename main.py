@@ -102,7 +102,10 @@ def handle_postback(event):
             data = json.load(f)
         line_bot_api.push_message(event.source.user_id,TextSendMessage(text='ちょっとまってね！'))
 
-        Generater.generation(Generater.read_json("data.json"))
+        if event.source.user_id == "Uf7745f35678b57d81af97d4bbdc2d44b":
+            Generater.generation(Generater.read_json("data.json"),True)
+        else:
+            Generater.generation(Generater.read_json("data.json"),False)
 
         cwd = os.path.abspath(os.path.dirname(__file__))
         computer_path= f"{cwd}/Image.png"
