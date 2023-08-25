@@ -387,7 +387,7 @@ def generation(data,flag):
     D.text((1867-blen,585),f'{ScoreCVBasis}換算',font=config_font(24))
 
     if flag == True:
-        if ScoreTotal >= 240:
+        if ScoreTotal >= 230:
             ScoreEv =Image.open(f'{cwd}/artifactGrades/SSS.png')
         elif ScoreTotal >= 220:
             ScoreEv =Image.open(f'{cwd}/artifactGrades/SS.png')
