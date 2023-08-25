@@ -176,7 +176,7 @@ def read_json(path):
         data = json.load(f)
     return data
 
-def generation(data):
+def generation(data,flag):
     #config 
     element = data.get('元素')
     
@@ -385,15 +385,27 @@ def generation(data):
     D.text((1652-ScoreLen//2,420),str(ScoreTotal),font=config_font(75))
     blen = D.textlength(f'{ScoreCVBasis}換算',font=config_font(24))
     D.text((1867-blen,585),f'{ScoreCVBasis}換算',font=config_font(24))
-    
-    if ScoreTotal >= 220:
-        ScoreEv =Image.open(f'{cwd}/artifactGrades/SS.png')
-    elif ScoreTotal >= 200:
-        ScoreEv =Image.open(f'{cwd}/artifactGrades/S.png')
-    elif ScoreTotal >= 180:
-        ScoreEv =Image.open(f'{cwd}/artifactGrades/A.png')
+
+    if flag == True:
+        if ScoreTotal >= 240:
+            ScoreEv =Image.open(f'{cwd}/artifactGrades/SSS.png')
+        elif ScoreTotal >= 220:
+            ScoreEv =Image.open(f'{cwd}/artifactGrades/SS.png')
+        elif ScoreTotal >= 200:
+            ScoreEv =Image.open(f'{cwd}/artifactGrades/S.png')
+        elif ScoreTotal >= 180:
+            ScoreEv =Image.open(f'{cwd}/artifactGrades/A.png')
+        else:
+            ScoreEv =Image.open(f'{cwd}/artifactGrades/B.png')
     else:
-        ScoreEv =Image.open(f'{cwd}/artifactGrades/B.png')
+        if ScoreTotal >= 220:
+            ScoreEv =Image.open(f'{cwd}/artifactGrades/SS.png')
+        elif ScoreTotal >= 200:
+            ScoreEv =Image.open(f'{cwd}/artifactGrades/S.png')
+        elif ScoreTotal >= 180:
+            ScoreEv =Image.open(f'{cwd}/artifactGrades/A.png')
+        else:
+            ScoreEv =Image.open(f'{cwd}/artifactGrades/B.png')
     
     ScoreEv = ScoreEv.resize((ScoreEv.width//8,ScoreEv.height//8))
     EvMask = ScoreEv.copy()
@@ -485,41 +497,81 @@ def generation(data):
         ATFScorelen = D.textlength(str(Score),config_font(36))
         D.text((380+i*373-ATFScorelen,1016),str(Score),font=config_font(36))
         D.text((295+i*373-ATFScorelen,1025),'Score',font=config_font(27),fill=(160,160,160))
-        
-        PointRefer = {
-            "total": {
-                "SS": 220,
-                "S": 200,
-                "A": 180
-            },
-            "flower": {
-                "SS": 50,
-                "S": 45,
-                "A": 40
-            },
-            "wing": {
-                "SS": 50,
-                "S": 45,
-                "A": 40
-            },
-            "clock": {
-                "SS": 45,
-                "S": 40,
-                "A": 35
-            },
-            "cup": {
-                "SS": 45,
-                "S": 40,
-                "A": 37
-            },
-            "crown": {
-                "SS": 40,
-                "S": 35,
-                "A": 30
+        if flag == True:
+            PointRefer = {
+                "total": {
+                    "SSS": 230,
+                    "SS": 220,
+                    "S": 200,
+                    "A": 180
+                },
+                "flower": {
+                    "SSS": 55,
+                    "SS": 50,
+                    "S": 45,
+                    "A": 40
+                },
+                "wing": {
+                    "SSS": 55,
+                    "SS": 50,
+                    "S": 45,
+                    "A": 40
+                },
+                "clock": {
+                    "SSS": 50,
+                    "SS": 45,
+                    "S": 40,
+                    "A": 35
+                },
+                "cup": {
+                    "SSS": 50,
+                    "SS": 45,
+                    "S": 40,
+                    "A": 37
+                },
+                "crown": {
+                    "SSS": 45,
+                    "SS": 40,
+                    "S": 35,
+                    "A": 30
+                }
             }
-        }
-        
-        if Score >= PointRefer[parts]['SS']:
+        else:
+            PointRefer = {
+                "total": {
+                    "SS": 220,
+                    "S": 200,
+                    "A": 180
+                },
+                "flower": {
+                    "SS": 50,
+                    "S": 45,
+                    "A": 40
+                },
+                "wing": {
+                    "SS": 50,
+                    "S": 45,
+                    "A": 40
+                },
+                "clock": {
+                    "SS": 45,
+                    "S": 40,
+                    "A": 35
+                },
+                "cup": {
+                    "SS": 45,
+                    "S": 40,
+                    "A": 37
+                },
+                "crown": {
+                    "SS": 40,
+                    "S": 35,
+                    "A": 30
+                }
+            }
+        if Score >= PointRefer[parts]['SSS']:
+            ScoreImage =Image.open(f'{cwd}/artifactGrades/SSS.png')
+        elif Score >= PointRefer[parts]['SS']:
             ScoreImage =Image.open(f'{cwd}/artifactGrades/SS.png')
         elif Score >= PointRefer[parts]['S']:
             ScoreImage =Image.open(f'{cwd}/artifactGrades/S.png')
